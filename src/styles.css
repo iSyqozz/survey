@@ -1,1 +1,126 @@
-/* You can add global styles to this file, and also import other style files */
+*{
+    --font-color: black;
+    --secondary-color-color: rgb(182, 182, 182);
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-color-color);
+    padding: 0;
+    margin: 0;
+}
+
+.questions-wrapper{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: white;
+    border-radius: 5%;
+    width: 600px;
+    height: 400px;
+    position: relative;
+    border: 2px solid black;
+    overflow: hidden;
+}
+
+.question{
+    color: var(--font-color);
+    background-color: var(--secondary-color-color);
+    padding: 10px;
+    font-size: larger;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.answers-wrapper{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    width: 45%;
+    height: 28%;
+}
+
+.answers-wrapper > div{
+    color: var(--font-color);
+    background-color: var(--secondary-color-color);
+    border-radius: 5%;
+    padding: 10px;
+    font-size: 17px;
+    transition: all 0.15s ease-in-out;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+}
+
+.answers-wrapper > div:hover{
+    transform: scale(1.1);
+    color: white;
+    background-color: black;
+    cursor: pointer;
+}
+
+.answers-wrapper > div.choosen{
+    transform: scale(1.1) ;
+    color: white ;
+    background-color: black;
+}
+
+.submit{
+    border-radius: 5%;
+    font-size: 17px;
+    transition: all 0.15s ease-in-out;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: white;
+    background-color: black;
+    cursor: pointer;
+    padding: 10px 40px 10px 40px;
+}
+
+.submit:hover{
+    transform: scale(1.1);
+}
+
+.timer{
+    position: absolute;
+    left: 13px;
+    top: 12px;
+    font-size: 20px;
+}
+
+
+.user-form{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    height: 400px;
+    align-items: start;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.user-form > div{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.user-form > div > label{
+    width: 100px;
+}
