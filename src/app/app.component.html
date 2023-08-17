@@ -1,68 +1,71 @@
 
 
+<h1>
+  {{pageTitle}}
+</h1>
 
-
-<form class="user-form" #userInputForm="ngForm">
-  <div>
-    <label  for="firstName">First Name</label>
-    <input type="text" id="firstName" name="firstName" [(ngModel)]="firstName" required>
-  </div>
-
-  <div>
-    <label  for="lastName">Last Name</label>
-    <input type="text" id="lastName" name="lastName" [(ngModel)]="lastName" required>
-  </div>
-
-  <div>
-    <label  for="age">Age</label>
-    <input type="text" id="age" name="age" [(ngModel)]="age" required>
-  </div>
-
-  <div>
-    <label  for="phone">Phone Number</label>
-    <input type="text" id="phone" name="phone" [(ngModel)]="phone" required>
-  </div>
-
-  <div>
-    <label  for="email">E-mail</label>
-    <input type="text" id="email" name="email" [(ngModel)]="email" required>
-  </div>
+<div *ngIf="saved === false">
   
-</form>
+  <form class="user-form" #userInputForm="ngForm">
+    <div style="position: relative;">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" name="firstName" [(ngModel)]="firstName" required>
+      <div *ngIf="!validate_input('first')" class="error first-name-error">Invalid First Name</div>
+    </div>
+
+    <div style="position: relative;">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" name="lastName" [(ngModel)]="lastName" required>
+      <div *ngIf="!validate_input('last')" class="error last-name-error">Invalid Last Name</div>
+    </div>
+
+    <div style="position: relative;">
+      <label for="age">Age</label>
+      <input type="text" id="age" name="age" [(ngModel)]="age" required>
+      <div *ngIf="!validate_input('age')" class="error age-error">Invalid Age</div>
+    </div>
+
+    <div style="position: relative;">
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" name="phone" [(ngModel)]="phone" required>
+      <div *ngIf="!validate_input('number')" class="error phone-error">Invalid Phone Number</div>
+    </div>
+
+    <div style="position: relative;">
+      <label for="email">E-mail</label>
+      <input type="text" id="email" name="email" [(ngModel)]="email" required>
+      <div *ngIf="!validate_input('email')" class="error email-error">Invalid E-mail</div>
+    </div>
+
+    <button class="form-button" value="submit" (click)="validate_form()">
+      submit
+    </button>
+  </form>
+</div>
 
 
 
 
+<div *ngIf="saved === true" class="questions-wrapper">
 
-
-<div class="questions-wrapper">
-
-  <div class="timer">0:{{time/1000}}</div>
+  <div class="timer" [class.timer-close]="isClose()">0:{{time/1000}}</div>
 
   <div class="question">
     {{question}}
   </div>
 
   <div class="answers-wrapper">
-    <div (click)="set_answer(a1)"
-    class="choice"
-    [class.choosen]="highlight(a1)"
-    >{{a1}}</div>
-    <div (click)="set_answer(a2)"
-    class="choice"
-    [class.choosen]="highlight(a2)"
-    >{{a2}}</div>
-    <div (click)="set_answer(a3)"
-    class="choice"
-    [class.choosen]="highlight(a3)"
-    >{{a3}}</div>
-    <div (click)="set_answer(a4)"
-    class="choice"
-    [class.choosen]="highlight(a4)"
-    >{{a4}}</div>
+    <div (click)="set_answer(a1)" class="choice" [class.choosen]="highlight(a1)">{{a1}}</div>
+    <div (click)="set_answer(a2)" class="choice" [class.choosen]="highlight(a2)">{{a2}}</div>
+    <div (click)="set_answer(a3)" class="choice" [class.choosen]="highlight(a3)">{{a3}}</div>
+    <div (click)="set_answer(a4)" class="choice" [class.choosen]="highlight(a4)">{{a4}}</div>
   </div>
 
-  <div (click)='submit_answer()' class="submit">
-    Next
+  <div (click)="cq != 9?submit_answer():get_score()" class="submit">
+    {{AnswersButton}}
+  </div>
+
+  <div *ngIf="warning === true" class="warning">
+    {{warningMessage}}
   </div>
 </div>

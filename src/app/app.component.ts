@@ -1,5 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import axios from 'axios';
+
+
+
+import { Component } from '@angular/core';
 import { question_props } from 'src/types';
 
 const question_list: Array<question_props> = [
@@ -74,14 +76,42 @@ const question_list: Array<question_props> = [
     a4: "Ozone",
   },
 ];
+
+
+//regex matching
+
+// First Name
+const firstNameRegex: RegExp = /^[A-Za-z]+$/;
+
+// Last Name
+const lastNameRegex: RegExp = /^[A-Za-z]+$/;
+
+// Age
+const ageRegex: RegExp = /^\d{1,3}$/;
+
+// Phone Number
+const phoneNumberRegex: RegExp = /^\d{8}$/;
+
+// Email
+const emailRegex: RegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+
+
+const example_endpoint = `https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=20`
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent {
   title = 'quiz';
 
+  //page title
+  pageTitle = 'Register';
+
+  AnswersButton = 'next';
   //questions and answers 
   cq = 0;
   questions = question_list;
@@ -103,16 +133,12 @@ export class AppComponent implements OnInit, OnDestroy {
   phone = ''
   email = ''
 
+  //conditional rendering
+  saved = false
+  warning = false
+  warningMessage = 'Choose an Answer!'
 
-
-  ngOnInit(): void {
-    // Start the timer when the component loads
-    this.set_timer();
-  }
-
-  ngOnDestroy(): void {
-    // Clean up resources if needed
-  }
+  res:Array<any> = []
 
   //starting and resetting timer
   set_timer() {
@@ -127,6 +153,21 @@ export class AppComponent implements OnInit, OnDestroy {
         this.time -= 1000;
       }
     }, 1000);
+  }
+
+  isClose() {
+
+    if (this.time <= 5000) {
+      this.warning = true;
+      this.warningMessage = 'Time is running Out!';
+      setTimeout(() => {
+        this.warning = false
+      }, 5000);
+    }
+
+    return (
+      this.time <= 5000 ? true : false
+    )
   }
 
   // question traversal
@@ -147,7 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
   //setting answer
   set_answer(ansr: string) {
     this.currChoice = ansr;
-    console.log(this.currChoice);
   }
 
   highlight(ansr: string) {
@@ -157,15 +197,77 @@ export class AppComponent implements OnInit, OnDestroy {
 
   //sumbitting_answer
   submit_answer() {
+
+    if (this.currChoice === '') {
+      this.warning = true
+      this.warningMessage = 'Choose an Answer!';
+      setTimeout(() => {
+        this.warning = false
+      }, 3000);
+      return
+    }
+
+    this.warning = false
+
+    if (this.cq === question_list.length - 1) {
+      this.AnswersButton = 'submit'
+    }
+
     this.submittedAnswers.push(this.currChoice)
     this.currChoice = '';
     this.time = 30000;
-    this.set_question()
-    console.log(this.submittedAnswers)
+    this.set_question();
+    console.log(this.submittedAnswers);
   }
+
+
+  //validate one input
+  validate_input(type: string) {
+    if (type === 'first') {
+      return this.firstName === '' ? true : firstNameRegex.test(this.firstName)
+    } else if (type === 'last') {
+      return this.lastName === '' ? true : lastNameRegex.test(this.lastName)
+    } else if (type === 'age') {
+      return this.age === '' ? true : ageRegex.test(this.age)
+    } else if (type === 'number') {
+      return this.phone === '' ? true : phoneNumberRegex.test(this.phone)
+    } else if (type === 'email') {
+      return this.email === '' ? true : emailRegex.test(this.email)
+    } else {
+      return false
+    }
+  }
+
+
+  //form inputs validation
+  validate_form() {
+
+    const res1 = firstNameRegex.test(this.firstName);
+    const res2 = lastNameRegex.test(this.lastName);
+    const res3 = ageRegex.test(this.age);
+    const res4 = phoneNumberRegex.test(this.phone);
+    const res5 = emailRegex.test(this.email);
+
+    if (res1 && res2 && res3 && res4 && res5) {
+      this.saved = true
+      this.pageTitle = 'Quiz'
+      this.set_timer()
+    }
+    else {
+      alert('Invalid or Missing Form Data')
+    }
+
+  }
+
 
   //getting score
   async get_score() {
 
+     const data = await fetch(example_endpoint,{
+      method:'GET'
+     });
+
+     this.res = await data.json();
+     console.log(this.res)
   }
 }
