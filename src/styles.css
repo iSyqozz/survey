@@ -53,6 +53,18 @@ h1{
 }
 
 
+.final-score{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 45%;
+    height: 28%;
+    font-weight: bolder;
+    font-size: larger;
+}
+
+
 .answers-wrapper{
     display: grid;
     grid-template-columns: 1fr 1fr;

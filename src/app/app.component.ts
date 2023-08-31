@@ -97,7 +97,7 @@ const emailRegex: RegExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 
 
-const example_endpoint = `https://cat-fact.herokuapp.com/facts/random?animal_type=cat&amount=20`
+const example_endpoint = `http://localhost:8080`;
 
 
 @Component({
@@ -137,12 +137,15 @@ export class AppComponent {
   saved = false
   warning = false
   warningMessage = 'Choose an Answer!'
+  res: number = 0
+  finished = false;
+  score_message = this.finished ? 'Congratulations!' : 'Better Luck Next Time!'
 
-  res:Array<any> = []
+  id:any
 
   //starting and resetting timer
   set_timer() {
-    const id = setInterval(() => {
+    this.id = setInterval(() => {
       if (this.time === 0) {
         this.submittedAnswers.push(this.currChoice)
         this.currChoice = '';
@@ -172,17 +175,19 @@ export class AppComponent {
 
   // question traversal
   set_question() {
-    if (this.cq === this.questions.length - 1) {
-      this.get_score()
-
-    } else {
-      this.cq += 1
+    if (this.cq < question_list.length - 1) {
+      if (this.cq != question_list.length - 1) {
+        this.cq += 1
+      }
       this.question = this.questions[this.cq].question
       this.a1 = this.questions[this.cq].a1
       this.a2 = this.questions[this.cq].a2
       this.a3 = this.questions[this.cq].a3
       this.a4 = this.questions[this.cq].a4
+    } else {
+      this.get_score();
     }
+
   }
 
   //setting answer
@@ -197,6 +202,7 @@ export class AppComponent {
 
   //sumbitting_answer
   submit_answer() {
+    console.log(this.currChoice, this.cq, this.submittedAnswers)
 
     if (this.currChoice === '') {
       this.warning = true
@@ -209,7 +215,7 @@ export class AppComponent {
 
     this.warning = false
 
-    if (this.cq === question_list.length - 1) {
+    if (this.cq === question_list.length - 2) {
       this.AnswersButton = 'submit'
     }
 
@@ -241,7 +247,6 @@ export class AppComponent {
 
   //form inputs validation
   validate_form() {
-
     const res1 = firstNameRegex.test(this.firstName);
     const res2 = lastNameRegex.test(this.lastName);
     const res3 = ageRegex.test(this.age);
@@ -259,15 +264,36 @@ export class AppComponent {
 
   }
 
-
   //getting score
   async get_score() {
 
-     const data = await fetch(example_endpoint,{
-      method:'GET'
-     });
+    console.log('test')
 
-     this.res = await data.json();
-     console.log(this.res)
+    const data = await fetch(example_endpoint + '/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        {
+          personalInfo: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            age: this.age,
+            phone: this.phone,
+            email: this.email
+          },
+          answers: this.submittedAnswers
+        }
+      )
+    });
+
+    this.res = await data.json();
+    this.finished = true;
+
+    this.score_message = (this.res >= 6) ? 'Congratulations!' : 'Better Luck Next Time!'
+    clearInterval(this.id);
   }
 }
+
+

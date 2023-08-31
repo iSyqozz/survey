@@ -1,11 +1,9 @@
-
-
 <h1>
   {{pageTitle}}
 </h1>
 
 <div *ngIf="saved === false">
-  
+
   <form class="user-form" #userInputForm="ngForm">
     <div style="position: relative;">
       <label for="firstName">First Name</label>
@@ -46,7 +44,7 @@
 
 
 
-<div *ngIf="saved === true" class="questions-wrapper">
+<div *ngIf="saved === true && finished === false" class="questions-wrapper">
 
   <div class="timer" [class.timer-close]="isClose()">0:{{time/1000}}</div>
 
@@ -61,11 +59,27 @@
     <div (click)="set_answer(a4)" class="choice" [class.choosen]="highlight(a4)">{{a4}}</div>
   </div>
 
-  <div (click)="cq != 9?submit_answer():get_score()" class="submit">
+  <div (click)="submit_answer()" class="submit">
     {{AnswersButton}}
   </div>
 
   <div *ngIf="warning === true" class="warning">
     {{warningMessage}}
   </div>
+</div>
+
+
+
+
+
+<div *ngIf="finished === true" class="questions-wrapper">
+
+  <h2 class="question">
+    {{score_message}}
+  </h2>
+
+  <div class="final-score">
+    Your score is {{res}}
+  </div>
+
 </div>
